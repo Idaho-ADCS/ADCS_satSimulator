@@ -20,7 +20,11 @@ enum Command
 	CMD_ORIENT_X_POS= 0xe0,
 	CMD_ORIENT_Y_POS= 0xe1,
 	CMD_ORIENT_X_NEG= 0xe2,
-	CMD_ORIENT_Y_NEG= 0xe3
+	CMD_ORIENT_Y_NEG= 0xe3,
+
+	CMD_TST_BLDC = 0xa7,	// test functionality of BLDC
+	CMD_TST_MTX = 0xa8	// test functionality of magnetorquers
+	
 };
 
 // data packet status codes

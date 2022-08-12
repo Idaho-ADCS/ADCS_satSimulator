@@ -12,7 +12,7 @@
 #include "comm.h"
 
 // MODE ----- use to configure transmitter, or satellite side {false=satellite}
-bool sender = true;
+bool sender = false;
 
 // Definitions
 uint8_t satAddress[] = {0x24, 0xD7, 0xEB, 0x10, 0xEE, 0x34};
@@ -52,10 +52,20 @@ void display(){
 
 void enableADCS(){
     digitalWrite(GPIO_ENABLE, HIGH);
+
+    if(sender == false){
+        init_uart();
+    }
+
 }
 
 void disableADCS(){
     digitalWrite(GPIO_ENABLE, LOW);
+
+    if(sender == false){
+        disable_uart();
+    }
+
 }
 // translate the index into a command to send this is between esp-interface and esp-sat
 void sendCommand(int cmdIndex){
@@ -75,6 +85,12 @@ void sendCommand(int cmdIndex){
     case 4: //simple detumble
       send_command(CMD_TST_SIMPLE_DETUMBLE);
       break;
+    case 5: // motion
+      send_command(CMD_TST_BLDC);
+      break;
+    case 6: // motion
+      send_command(CMD_TST_MTX);
+      break;  
     case 98: //enable 
       enableADCS();
       break;
@@ -120,11 +136,6 @@ void setup(){
     Serial.begin(115200);
     
     WiFi.mode(WIFI_STA);
-
-
-    if(sender == false){
-        init_uart();
-    }
  
     //check to see if esp-NOW protocol initializes correctly
     if(esp_now_init() != ESP_OK){
